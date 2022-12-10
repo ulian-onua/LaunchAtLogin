@@ -6,6 +6,13 @@ import os.log
 private let hasMigratedKey = "LaunchAtLogin__hasMigrated"
 
 public enum LaunchAtLogin {
+	
+	@available(macOS 13, *)
+	private enum SetupType {
+		case legacy
+		case modern
+	}
+	
 	@available(macOS 11, *)
 	private static let logger = Logger(subsystem: "com.sindresorhus.LaunchAtLogin", category: "main")
 
@@ -44,7 +51,7 @@ public enum LaunchAtLogin {
 
 		unregisterLegacy()
 	}
-
+	
 	public static var isEnabled: Bool {
 		get {
 			if #available(macOS 13, *) {
@@ -60,11 +67,11 @@ public enum LaunchAtLogin {
 
 			kvo.willChangeValue(for: \.isEnabled)
 
-			if #available(macOS 13, *) {
-				isEnabledModern = newValue
-			} else {
+//			if #available(macOS 13, *) {
+//				isEnabledModern = newValue
+//			} else {
 				isEnabledLegacy = newValue
-			}
+			//}
 
 			kvo.didChangeValue(for: \.isEnabled)
 
